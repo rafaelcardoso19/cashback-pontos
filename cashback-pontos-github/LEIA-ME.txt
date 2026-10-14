@@ -1,0 +1,31 @@
+CASHBACK POR PONTOS — SITE COM ATUALIZAÇÃO AUTOMÁTICA
+
+O QUE ESTE PACOTE FAZ
+- Usa a versão 10 do site como ponto de partida.
+- Uma rotina lê diariamente a página pública do ranking Melhores Cartões.
+- Se encontrar uma quantidade plausível de cartões, atualiza a base embutida no index.html.
+- Preserva benefícios e campos manuais já conhecidos quando a fonte não os informa claramente.
+- Se a página mudar, estiver indisponível ou a extração parecer incompleta, mantém a última base válida e ainda tenta publicar o site.
+- Também permite executar a rotina manualmente pela aba Actions do GitHub.
+
+FONTE
+https://www.melhorescartoes.com.br/melhores-cartoes-credito-pontos-milhas
+
+IMPORTANTE
+A atualização automática não é uma API oficial. O site de origem pode mudar o HTML ou restringir acessos; nesses casos, a rotina falha com segurança e mantém os dados anteriores. Pontuação, spread, anuidade e benefícios extraídos devem ser considerados uma referência e conferidos com o emissor. O código não deve ser tratado como confirmação oficial de condições comerciais.
+
+COMO PUBLICAR
+1. No GitHub, crie um repositório chamado cashback-pontos. Para facilitar a publicação pelo Pages, use um repositório público.
+2. Extraia este ZIP no computador.
+3. Envie para a raiz do repositório TODOS os itens de dentro da pasta cashback-pontos-github, inclusive a pasta oculta .github.
+4. Abra Settings > Pages e selecione GitHub Actions como fonte de publicação.
+5. Abra Actions e execute “Atualizar base de cartões e publicar site” com Run workflow para fazer o primeiro teste.
+6. Abra o endereço que o GitHub Pages mostrar quando a execução terminar.
+
+ROTINA
+- Verificação diária às 07h17 (horário de Brasília).
+- Pode ser acionada manualmente em Actions > Atualizar base de cartões e publicar site > Run workflow.
+- O GitHub pode atrasar execuções agendadas em períodos de alta demanda.
+
+SE A ATUALIZAÇÃO FALHAR
+Abra Actions, selecione a execução mais recente e leia o log “Atualizar cartões a partir da fonte pública”. A base anterior é preservada quando a leitura é insuficiente.
