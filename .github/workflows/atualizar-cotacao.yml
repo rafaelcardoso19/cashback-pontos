@@ -22,6 +22,15 @@ jobs:
         env:
           HOTMILHAS_MILES: '100000'
         run: python hotmilhas_scraper.py
+      - name: Baixar diagnóstico da HotMilhas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostico-hotmilhas
+          path: |
+            hotmilhas-debug.png
+            hotmilhas-debug.html
+          if-no-files-found: warn
       - name: Salvar cotação atualizada
         run: |
           git config user.name 'hotmilhas-bot'
