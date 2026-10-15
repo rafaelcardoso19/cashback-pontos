@@ -16,7 +16,6 @@ from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeo
 
 BASE_URL = os.getenv("HOTMILHAS_URL", "https://hotmilhas.com.br/")
 OUTPUT = Path(os.getenv("QUOTE_OUTPUT", "quote.json"))
-EMAIL = os.getenv("HOTMILHAS_EMAIL", "")
 QUANTITY = os.getenv("HOTMILHAS_MILES", "100000")
 TIMEOUT_MS = int(os.getenv("HOTMILHAS_TIMEOUT_MS", "45000"))
 
@@ -34,17 +33,18 @@ def read_old_quote():
 
 
 def main():
-    if not EMAIL:
-        print("ERRO: configure HOTMILHAS_EMAIL com um e-mail autorizado para usar no formulário público.", file=sys.stderr)
-        return 2
-
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(locale="pt-BR", timezone_id="America/Sao_Paulo")
         page.set_default_timeout(TIMEOUT_MS)
         try:
             page.goto(BASE_URL, wait_until="domcontentloaded")
-            page.get_by_label(re.compile("e-mail", re.I)).first.fill(EMAIL)
+            # O resultado é lido diretamente na tela. Não configuramos nem exigimos e-mail.
+            # Se a HotMilhas tornar o e-mail obrigatório para enviar a simulação, a execução
+            # falhará com diagnóstico em vez de inventar um endereço ou enviar dados pessoais.
+            email_fields = page.get_by_label(re.compile(r"e-?mail", re.I))
+            if email_fields.count() > 0:
+                print("Campo de e-mail encontrado; será deixado em branco para testar a consulta pública.")
 
             # O telefone é opcional no formulário mostrado publicamente; não preenchemos esse campo.
             selects = page.locator("select")
@@ -126,4 +126,3 @@ def main():
             browser.close()
 
 if __name__ == "__main__":
-    raise SystemExit(main())
