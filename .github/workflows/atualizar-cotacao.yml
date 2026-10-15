@@ -1,0 +1,40 @@
+name: Atualizar cotação HotMilhas
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 12 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  cotacao:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependências
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Consultar HotMilhas
+        env:
+          HOTMILHAS_EMAIL: ${{ secrets.HOTMILHAS_EMAIL }}
+          HOTMILHAS_MILES: '100000'
+        run: python hotmilhas_scraper.py
+
+      - name: Salvar cotação atualizada
+        run: |
+          git config user.name 'hotmilhas-bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add quote.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Atualiza cotação HotMilhas'
+            git push
+          fi
