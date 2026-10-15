@@ -1,0 +1,9 @@
+{
+  "programa": "LATAM Pass",
+  "prazo_dias": 150,
+  "milheiro_brl": null,
+  "data_cotacao": null,
+  "consultado_em": null,
+  "origem": "HotMilhas — simulação pública",
+  "status": "aguardando_primeira_consulta"
+}
